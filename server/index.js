@@ -3,23 +3,39 @@ import dotenv from "dotenv";
 import mongoose from "mongoose";
 import userRouter from "./routes/user.routes.js";
 import authRouter from "./routes/auth.routes.js";
+import cors from "cors";
+
+// Initialize express app
+const app = express();
+
+// Configure environment variables
 dotenv.config();
 
+// Middleware configuration
+app.use(cors({
+  origin: 'http://localhost:5173', // Replace with your frontend URL
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type'],
+}));
+
+app.use(express.json()); // Middleware to parse JSON bodies
+
+// Database connection
 mongoose
   .connect(process.env.Mongo_URL)
   .then(() => {
     console.log("Database connected");
   })
   .catch((err) => {
-    console.log("error in connecting");
+    console.error("Error connecting to database:", err);
   });
 
-const app = express();
-app.use(express.json());
+// Define routes
+app.use("/api/user", userRouter);
+app.use("/api/auth", authRouter);
 
-app.listen(3000, () => {
-  console.log("server listening on port 3000");
+// Start server
+const port = 3000;
+app.listen(port, () => {
+  console.log(`Server listening on port ${port}`);
 });
-
-app.use("/api/user",userRouter);
-app.use("/api/auth",authRouter);

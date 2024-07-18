@@ -1,22 +1,44 @@
-//import React from 'react'
-
 import { Link } from "react-router-dom";
 import { useState } from "react";
 
 const SignUp = () => {
-  const [data, setdata] = useState({});
+  const[formData,setFormData]=useState({});
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
+ 
   const handleChange = (e) => {
-    setdata({
-      ...setdata,
+    setFormData({
+      ...formData,
       [e.target.id]: e.target.value,
     });
   };
-
-  const handleSubmit=(e)=>{
+  const handleSubmit = async (e) => {
     e.preventDefault();
-  }
-
-  console.log(setdata);
+    try {
+      setLoading(true);
+      const res = await fetch('http://localhost:3000/api/auth/signup', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+      const data = await res.json();
+      console.log(data);
+      if (data.success === false) {
+        setLoading(false);
+        setError(data.message);
+        return;
+      }
+      setLoading(false);
+      setError(null);
+      
+    } catch (error) {
+      setLoading(false);
+      setError(error.message);
+    }
+  };
+  
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-black p-4">
@@ -28,34 +50,35 @@ const SignUp = () => {
           <hr className="w-full border-gray-400" />
         </div>
 
-        <form className="space-y-6">
+        <form className="space-y-6" onSubmit={handleSubmit}>
           <div>
             <label
               htmlFor="email"
-              className="block text-sm font-medium text-white border-e-white"
+              className="block text-sm font-medium text-white"
             >
               Email
             </label>
             <input
               type="email"
               id="email"
-              className="w-full px-4 py-2 mt-1 bg-gray-800 border border-gray-700 rounded text-gray-400 focus:ring-2 p-3 rounded-lg focus:ring-blue-500 focus:border-transparent"
+              className="w-full px-4 py-2 mt-1 bg-gray-800 border border-gray-700 rounded text-gray-400 focus:ring-2 p-3 focus:ring-blue-500 focus:border-transparent"
               placeholder="Email Address"
               required
+              onChange={handleChange}
             />
           </div>
 
           <div>
             <label
-              htmlFor="password"
+              htmlFor="username"
               className="block text-sm font-medium text-white"
             >
               Username
             </label>
             <input
-              type="Username"
-              id="Username"
-              className="w-full px-4 py-2 mt-1 bg-gray-800 border border-gray-700 rounded p-3 rounded-lg text-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              type="text"
+              id="username"
+              className="w-full px-4 py-2 mt-1 bg-gray-800 border border-gray-700 rounded text-gray-400 focus:ring-2 p-3 focus:ring-blue-500 focus:border-transparent"
               placeholder="Username"
               required
               onChange={handleChange}
@@ -72,9 +95,10 @@ const SignUp = () => {
             <input
               type="password"
               id="password"
-              className="w-full px-4 py-2 mt-1 bg-gray-800 border border-gray-700 rounded p-3 rounded-lg text-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full px-4 py-2 mt-1 bg-gray-800 border border-gray-700 rounded text-gray-400 focus:ring-2 p-3 focus:ring-blue-500 focus:border-transparent"
               placeholder="Password"
               required
+              onChange={handleChange}
             />
           </div>
 
@@ -86,14 +110,14 @@ const SignUp = () => {
 
           <button
             type="submit"
-            className="w-full py-2 text-white bg-blue-600 rounded hover:bg-blue-700 p-3 rounded-lg"
+            className="w-full py-2 text-white bg-blue-600 rounded hover:bg-blue-700 p-3"
           >
             Sign Up
           </button>
         </form>
 
         <p className="text-center text-gray-400">
-          have an account?{" "}
+          Have an account?{" "}
           <Link to="/signin" className="text-blue-500 hover:underline">
             Sign In
           </Link>
