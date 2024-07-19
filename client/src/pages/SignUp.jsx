@@ -41,8 +41,8 @@ const SignUp = () => {
   
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-black p-4">
-      <div className="w-full max-w-md p-8 space-y-6 bg-gray-900 rounded-lg shadow-md">
+    <div className="min-h-screen flex items-center justify-center bg-black p-4 ">
+      <div className="w-full max-w-md p-8 space-y-6 bg-gray-900  shadow-md rounded-3xl border border-neutral-800">
         <h2 className="text-3xl font-bold text-center text-white">Sign Up</h2>
 
         <div className="relative flex items-center justify-center">
@@ -61,7 +61,7 @@ const SignUp = () => {
             <input
               type="email"
               id="email"
-              className="w-full px-4 py-2 mt-1 bg-gray-800 border border-gray-700 rounded text-gray-400 focus:ring-2 p-3 focus:ring-blue-500 focus:border-transparent"
+              className="w-full px-4 py-2 mt-1 bg-gray-800 border border-gray-700 rounded-lg text-gray-400 focus:ring-2 p-3 focus:ring-blue-500 focus:border-transparent"
               placeholder="Email Address"
               required
               onChange={handleChange}
@@ -78,7 +78,7 @@ const SignUp = () => {
             <input
               type="text"
               id="username"
-              className="w-full px-4 py-2 mt-1 bg-gray-800 border border-gray-700 rounded text-gray-400 focus:ring-2 p-3 focus:ring-blue-500 focus:border-transparent"
+              className="w-full px-4 py-2 mt-1 bg-gray-800  border-gray-700 rounded-lg text-gray-400 focus:ring-2 p-3 focus:ring-blue-500 focus:border-transparent"
               placeholder="Username"
               required
               onChange={handleChange}
@@ -95,7 +95,7 @@ const SignUp = () => {
             <input
               type="password"
               id="password"
-              className="w-full px-4 py-2 mt-1 bg-gray-800 border border-gray-700 rounded text-gray-400 focus:ring-2 p-3 focus:ring-blue-500 focus:border-transparent"
+              className="w-full px-4 py-2 mt-1 bg-gray-800 border border-gray-700 rounded-lg text-gray-400 focus:ring-2 p-3 focus:ring-blue-500 focus:border-transparent"
               placeholder="Password"
               required
               onChange={handleChange}

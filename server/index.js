@@ -13,7 +13,7 @@ dotenv.config();
 
 // Middleware configuration
 app.use(cors({
-  origin: 'http://localhost:5173', // Replace with your frontend URL
+  origin: 'http://localhost:5173', //have to Replace with frontend URL post deployment
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   allowedHeaders: ['Content-Type'],
 }));
