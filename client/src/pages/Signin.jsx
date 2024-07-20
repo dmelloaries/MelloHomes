@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { FaGoogle } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
@@ -14,6 +14,13 @@ const SignIn = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  useEffect(() => {
+    
+    return () => {
+      dispatch(signInFailure(null));
+    };
+  }, [dispatch]);
+
   const handleChange = (e) => {
     setFormData({
       ...formData,
@@ -23,8 +30,8 @@ const SignIn = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    dispatch(signInStart());
     try {
-      dispatch(signInStart());
       const res = await fetch("http://localhost:3000/api/auth/signin", {
         method: "POST",
         headers: {
@@ -33,16 +40,24 @@ const SignIn = () => {
         body: JSON.stringify(formData),
       });
 
-      
+      if (!res.ok) {
+        const errorText = await res.text();
+        console.error("Error response from server:", errorText);
+        throw new Error("Wrong Credentials..!");
+      }
+
       const data = await res.json();
+      console.log('Data received:', data);
+
       if (!data.success) {
         dispatch(signInFailure(data.message));
         return;
       }
 
-      dispatch(signInSuccess(data));
-      navigate("/");
+      dispatch(signInSuccess(data.user));
+      navigate("/home");
     } catch (error) {
+      console.error('Fetch error:', error);
       dispatch(signInFailure(error.message));
     }
   };
@@ -66,10 +81,7 @@ const SignIn = () => {
 
         <form className="space-y-6" onSubmit={handleSubmit}>
           <div>
-            <label
-              htmlFor="email"
-              className="block text-sm font-medium text-white"
-            >
+            <label htmlFor="email" className="block text-sm font-medium text-white">
               Email
             </label>
             <input
@@ -83,10 +95,7 @@ const SignIn = () => {
           </div>
 
           <div>
-            <label
-              htmlFor="password"
-              className="block text-sm font-medium text-white"
-            >
+            <label htmlFor="password" className="block text-sm font-medium text-white">
               Password
             </label>
             <input
@@ -119,13 +128,13 @@ const SignIn = () => {
 
         <p className="text-center text-gray-400">
           Don't have an account?{" "}
-          <Link to="/SignUp" className="text-blue-500 hover:underline">
+          <Link to="/signup" className="text-blue-500 hover:underline">
             Sign Up
           </Link>
         </p>
 
         <p className="mt-4 text-xs text-center text-gray-500">
-          By creating an account, you agree to MelloHomes's{" "}
+          By signing in, you agree to MelloHomes's{" "}
           <a href="#" className="text-blue-500 hover:underline">
             Terms of Service
           </a>{" "}

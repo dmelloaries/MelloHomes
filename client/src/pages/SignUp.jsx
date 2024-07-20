@@ -2,18 +2,22 @@ import { Link } from "react-router-dom";
 import { useState } from "react";
 
 const SignUp = () => {
-  const[formData,setFormData]=useState({});
+  const [formData, setFormData] = useState({});
   const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(null);
   const [loading, setLoading] = useState(false);
- 
+
   const handleChange = (e) => {
     setFormData({
       ...formData,
       [e.target.id]: e.target.value,
     });
   };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setError(null);
+    setSuccess(null);
     try {
       setLoading(true);
       const res = await fetch('http://localhost:3000/api/auth/signup', {
@@ -24,25 +28,22 @@ const SignUp = () => {
         body: JSON.stringify(formData),
       });
       const data = await res.json();
-      console.log(data);
+      setLoading(false);
+
       if (data.success === false) {
-        setLoading(false);
         setError(data.message);
         return;
       }
-      setLoading(false);
-      setError(null);
-      
+      setSuccess('User created successfully!');
     } catch (error) {
       setLoading(false);
       setError(error.message);
     }
   };
-  
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-black p-4 ">
-      <div className="w-full max-w-md p-8 space-y-6 bg-gray-900  shadow-md rounded-3xl border border-neutral-800">
+      <div className="w-full max-w-md p-8 space-y-6 bg-gray-900 shadow-md rounded-3xl border border-neutral-800">
         <h2 className="text-3xl font-bold text-center text-white">Sign Up</h2>
 
         <div className="relative flex items-center justify-center">
@@ -78,7 +79,7 @@ const SignUp = () => {
             <input
               type="text"
               id="username"
-              className="w-full px-4 py-2 mt-1 bg-gray-800  border-gray-700 rounded-lg text-gray-400 focus:ring-2 p-3 focus:ring-blue-500 focus:border-transparent"
+              className="w-full px-4 py-2 mt-1 bg-gray-800 border border-gray-700 rounded-lg text-gray-400 focus:ring-2 p-3 focus:ring-blue-500 focus:border-transparent"
               placeholder="Username"
               required
               onChange={handleChange}
@@ -114,6 +115,12 @@ const SignUp = () => {
           >
             Sign Up
           </button>
+          {error && (
+            <p className="text-red-500 text-sm text-center mt-2">{error}</p>
+          )}
+          {success && (
+            <p className="text-green-500 text-sm text-center mt-2">{success}</p>
+          )}
         </form>
 
         <p className="text-center text-gray-400">

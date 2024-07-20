@@ -9,7 +9,7 @@ const Home = () => {
        
         
       
-        <h1>Home</h1>
+        <h1>Signed Up successfully ! </h1>
        
       
     </div>
