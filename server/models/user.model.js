@@ -16,7 +16,11 @@ const userSchema=new mongoose.Schema({
     password:{
         type:String,
         required:true
-    }
+    },
+    avatar:{
+        type: String,
+        default: "https://documents.iplt20.com/ipl/IPLHeadshot2024/57.png"
+      }
     
 },{timestamps:true})
 
