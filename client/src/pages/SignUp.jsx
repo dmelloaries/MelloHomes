@@ -1,11 +1,14 @@
 import { Link } from "react-router-dom";
 import { useState } from "react";
+import { FaGoogle } from "react-icons/fa";
+import OAuth from "../components/OAuth.jsx";
 
 const SignUp = () => {
   const [formData, setFormData] = useState({});
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
   const [loading, setLoading] = useState(false);
+  const backendAuthUrl = import.meta.env.VITE_BACKEND_SignupAUTH;
 
   const handleChange = (e) => {
     setFormData({
@@ -20,13 +23,14 @@ const SignUp = () => {
     setSuccess(null);
     try {
       setLoading(true);
-      const res = await fetch('http://localhost:3000/api/auth/signup', {
-        method: 'POST',
+      const res = await fetch(`${backendAuthUrl}`, {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify(formData),
       });
+      
       const data = await res.json();
       setLoading(false);
 
@@ -34,7 +38,7 @@ const SignUp = () => {
         setError(data.message);
         return;
       }
-      setSuccess('User created successfully!');
+      setSuccess("User created successfully!");
     } catch (error) {
       setLoading(false);
       setError(error.message);
@@ -103,15 +107,11 @@ const SignUp = () => {
             />
           </div>
 
-          <div className="flex items-center justify-between">
-            <a href="#" className="text-sm text-blue-500 hover:underline">
-              Forgot Password?
-            </a>
-          </div>
+          
 
           <button
             type="submit"
-            className="w-full py-2 text-white bg-blue-600 rounded hover:bg-blue-700 p-3"
+            className="w-full py-2 text-white bg-blue-600 rounded-lg hover:bg-blue-700 p-3"
           >
             Sign Up
           </button>
@@ -121,6 +121,14 @@ const SignUp = () => {
           {success && (
             <p className="text-green-500 text-sm text-center mt-2">{success}</p>
           )}
+          <div className="flex items-center justify-between">
+            {/* <button className="flex items-center justify-center w-full py-2 text-white font-semibold bg-red-700 hover:bg-red-800 p-3 rounded-lg">
+              <FaGoogle className="mr-2" />
+              Continue with Google
+            </button> */}
+            <OAuth></OAuth>
+            
+          </div>
         </form>
 
         <p className="text-center text-gray-400">
@@ -141,6 +149,7 @@ const SignUp = () => {
           </a>
         </p>
       </div>
+      <div></div>
     </div>
   );
 };

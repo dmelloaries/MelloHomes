@@ -2,7 +2,7 @@ import { BrowserRouter, Route,Routes } from "react-router-dom";
 import About from "./pages/About.jsx";
 import Signin from "./pages/Signin.jsx";
 import Home from "./pages/Home.jsx";
-import ProfileSec from "./pages/ProfileSec.jsx";
+
 import Header from "./components/Header.jsx";
 import SignUp from "./pages/SignUp.jsx";
 import LandingPage from "./pages/LandingPage.jsx"
@@ -24,7 +24,7 @@ function App() {
         <Route path="/SignUp" element={<SignUp/>}/>
         <Route path="/signin" element={<Signin/>}/>
         <Route path="/home" element={<Home></Home>}/>
-        <Route path="/profile" element={<ProfileSec/>}/>
+        
         <Route path="/" element={<LandingPage></LandingPage>}/>
 
         <Route path="/about" element={<About/>}/>

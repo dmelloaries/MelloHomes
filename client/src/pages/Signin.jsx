@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { FaGoogle } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
+import OAuth from "../components/OAuth.jsx";
+
 import {
   signInStart,
   signInSuccess,
@@ -13,6 +15,7 @@ const SignIn = () => {
   const { loading, error } = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const backendAuthUrl = import.meta.env.VITE_BACKEND_SigninAUTH;
 
   useEffect(() => {
     
@@ -32,7 +35,7 @@ const SignIn = () => {
     e.preventDefault();
     dispatch(signInStart());
     try {
-      const res = await fetch("http://localhost:3000/api/auth/signin", {
+      const res = await fetch(`${backendAuthUrl}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -67,10 +70,12 @@ const SignIn = () => {
       <div className="w-full max-w-md p-8 space-y-6 bg-gray-900 shadow-md rounded-3xl border border-neutral-800">
         <h2 className="text-3xl font-bold text-center text-white">Sign In</h2>
 
-        <button className="flex items-center justify-center w-full py-2 text-white font-semibold bg-red-700 hover:bg-red-800 p-3 rounded-lg">
+        {/* <button className="flex items-center justify-center w-full py-2 text-white font-semibold bg-red-700 hover:bg-red-800 p-3 rounded-lg">
           <FaGoogle className="mr-2" />
           Sign in with Google
-        </button>
+        </button> */}
+        <OAuth></OAuth>
+      
 
         <div className="relative flex items-center justify-center">
           <span className="absolute px-3 bg-gray-900 font-semibold text-white">
