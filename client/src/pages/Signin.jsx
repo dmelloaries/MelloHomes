@@ -1,9 +1,18 @@
-import React, { useState } from 'react';
-import { FaGoogle } from 'react-icons/fa';
-import { Link } from 'react-router-dom';
+import React, { useState } from "react";
+import { FaGoogle } from "react-icons/fa";
+import { Link, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  signInStart,
+  signInSuccess,
+  signInFailure,
+} from "../redux/user/userSlice.js";
 
 const SignIn = () => {
   const [formData, setFormData] = useState({});
+  const { loading, error } = useSelector((state) => state.user);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     setFormData({
@@ -14,16 +23,28 @@ const SignIn = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    try {
+      dispatch(signInStart());
+      const res = await fetch("http://localhost:3000/api/auth/signin", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
 
-    const res = await fetch(' http://localhost:3000/api/auth/signin', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(formData),
-    });
-    const data = await res.json();
-    console.log(data);
+      
+      const data = await res.json();
+      if (!data.success) {
+        dispatch(signInFailure(data.message));
+        return;
+      }
+
+      dispatch(signInSuccess(data));
+      navigate("/");
+    } catch (error) {
+      dispatch(signInFailure(error.message));
+    }
   };
 
   return (
@@ -45,7 +66,10 @@ const SignIn = () => {
 
         <form className="space-y-6" onSubmit={handleSubmit}>
           <div>
-            <label htmlFor="email" className="block text-sm font-medium text-white">
+            <label
+              htmlFor="email"
+              className="block text-sm font-medium text-white"
+            >
               Email
             </label>
             <input
@@ -59,7 +83,10 @@ const SignIn = () => {
           </div>
 
           <div>
-            <label htmlFor="password" className="block text-sm font-medium text-white">
+            <label
+              htmlFor="password"
+              className="block text-sm font-medium text-white"
+            >
               Password
             </label>
             <input
@@ -81,24 +108,28 @@ const SignIn = () => {
           <button
             type="submit"
             className="w-full py-2 text-white bg-blue-600 rounded hover:bg-blue-700 p-3 rounded-lg"
+            disabled={loading}
           >
-            Sign In
+            {loading ? "Signing In..." : "Sign In"}
           </button>
+          {error && (
+            <p className="text-red-500 text-sm text-center mt-2">{error}</p>
+          )}
         </form>
 
         <p className="text-center text-gray-400">
-          Don't have an account?{' '}
+          Don't have an account?{" "}
           <Link to="/SignUp" className="text-blue-500 hover:underline">
             Sign Up
           </Link>
         </p>
 
         <p className="mt-4 text-xs text-center text-gray-500">
-          By creating an account, you agree to MelloHomes's{' '}
+          By creating an account, you agree to MelloHomes's{" "}
           <a href="#" className="text-blue-500 hover:underline">
             Terms of Service
-          </a>{' '}
-          &{' '}
+          </a>{" "}
+          &{" "}
           <a href="#" className="text-blue-500 hover:underline">
             Privacy Policy
           </a>
